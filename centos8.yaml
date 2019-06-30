@@ -1,0 +1,32 @@
+---
+ - hosts: all
+   become: yes
+   vars:
+     ansible_repo_url: https://github.com/rhysmeister/ansible.git
+     packages:
+       - git
+       - net-tools
+       - python-setuptools
+       - python-pip
+     pip_packages:
+       - ansible
+       - virtualenv
+       - pyyaml
+       - jinja2
+       - pycryptodome
+
+   tasks:
+
+     - name: Install required tools
+       yum:
+         name: "{{ packages }}"
+
+     - name: Install ansible via pip
+       pip:
+         name: "{{ pip_packages }}"
+
+     - name: Clone custom ansible repo
+       git:
+         repo: "{{ ansible_repo_url }}"
+         dest: /home/vagrant/ansible
+       become: no
